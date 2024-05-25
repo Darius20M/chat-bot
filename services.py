@@ -169,8 +169,8 @@ def administrar_chatbot(text, number, messageId, name):
     time.sleep(2)
 
     if "hola" in text:
-        body = "¡Hola! 👋 Bienvenido a Bigdateros. ¿Cómo podemos ayudarte hoy?"
-        footer = "Equipo Bigdateros"
+        body = "¡Hola! 👋 Bienvenido a Name. ¿Cómo podemos ayudarte hoy?"
+        footer = "Equipo Darius"
         options = ["✅ servicios", "📅 agendar cita"]
 
         replyButtonData = buttonReply_Message(number, options, body, footer, "sed1", messageId)
@@ -179,22 +179,22 @@ def administrar_chatbot(text, number, messageId, name):
         list.append(replyButtonData)
     elif "servicios" in text:
         body = "Tenemos varias áreas de consulta para elegir. ¿Cuál de estos servicios te gustaría explorar?"
-        footer = "Equipo Bigdateros"
-        options = ["Analítica Avanzada", "Migración Cloud", "Inteligencia de Negocio"]
+        footer = "Equipo Darius"
+        options = ["Reajustar cita", "Cancelar cita"]
 
         listReplyData = listReply_Message(number, options, body, footer, "sed2", messageId)
         sticker = sticker_Message(number, get_media_id("perro_traje", "sticker"))
 
         list.append(listReplyData)
         list.append(sticker)
-    elif "inteligencia de negocio" in text:
+    elif "reajustar cita" in text:
         body = "Buenísima elección. ¿Te gustaría que te enviara un documento PDF con una introducción a nuestros métodos de Inteligencia de Negocio?"
-        footer = "Equipo Bigdateros"
+        footer = "Equipo Darius"
         options = ["✅ Sí, envía el PDF.", "⛔ No, gracias"]
 
         replyButtonData = buttonReply_Message(number, options, body, footer, "sed3", messageId)
         list.append(replyButtonData)
-    elif "sí, envía el pdf" in text:
+    elif "cancelar cita" in text:
         sticker = sticker_Message(number, get_media_id("pelfet", "sticker"))
         textMessage = text_Message(number, "Genial, por favor espera un momento.")
 
