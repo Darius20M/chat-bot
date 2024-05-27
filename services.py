@@ -1,10 +1,9 @@
 import requests
 import json
 import time
-import openai
+from openai import OpenAI
 import os
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
 def obtener_Mensaje_whatsapp(message):
@@ -25,8 +24,8 @@ def obtener_Mensaje_whatsapp(message):
 
 def enviar_Mensaje_whatsapp(data):
     try:
-        whatsapp_token = os.getenv('whatsapp_token')
-        whatsapp_url = os.getenv('whatsapp_url')
+        whatsapp_token = 'EAAFJrzEyDc4BO0PNvzo1ZC3Gryok4XeUoZCYRSGtl3HeiWGbGHWlhNiw3PLGJuPZCKeDmB9FKwrYcpDShm78FIcqLyZB97tWDnYmZBzI6iduLFO6g9SqM4RLZC7cxkblwG1VLneZBZBsZBuzYxPwFHVkdQQZAIyfe52IVwpA5ZC1nvMLP0YZB8rgI4VGE1QCiKTiOx8m'
+        whatsapp_url = 'https://graph.facebook.com/v19.0/312868241913454/messages'
         headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + whatsapp_token
@@ -157,15 +156,40 @@ def markRead_Message(messageId):
         "message_id": messageId
     })
     return data
-def generar_respuesta_openai(texto_usuario):
-    response = openai.Completion.create(
-        engine="davinci",
-        prompt=texto_usuario,
-        max_tokens=150
-    )
-    return response.choices[0].text.strip()
+def generar_respuesta_google_cloud(texto_usuario, api_key):
+    url = "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent"
+
+    payload = {
+        "contents": [
+            {
+                "role": "user",
+                "parts": [
+                    {
+                        "text": texto_usuario
+                    }
+                ]
+            }
+        ]
+    }
+
+    json_payload = json.dumps(payload)
+
+    headers = {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': 'AIzaSyAE_aDeizgmj2QcpV6Ia-GCEABMA6xsPNk'
+    }
+
+    response = requests.post(url, headers=headers, data=json_payload)
+    print(response)
+    if response.status_code == 200:
+        data = json.loads(response.text)
+        return data['candidates'][0]['content']['parts'][0]['text'].strip()
+    else:
+        print("Error:", response.status_code)
+        return None
 
 def administrar_chatbot(text, number, messageId, name):
+    key = os.environ.get("OPENAI_API_KEY")
     text = text.lower()
     list = []
     print("mensaje del usuario: ", text)
@@ -174,7 +198,7 @@ def administrar_chatbot(text, number, messageId, name):
     list.append(markRead)
     time.sleep(2)
 
-    respuesta_ai = generar_respuesta_openai(text)
+    respuesta_ai = generar_respuesta_google_cloud(text, key)
     textMessage = text_Message(number, respuesta_ai)
     list.append(textMessage)
 

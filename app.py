@@ -11,7 +11,7 @@ def verificar_token():
         token = request.args.get('hub.verify_token')
         challenge = request.args.get('hub.challenge')
 
-        if token == os.getenv('token') and challenge is not None:
+        if token == 'bigdateros' and challenge is not None:
             return challenge
         else:
             return 'token incorrecto', 403
